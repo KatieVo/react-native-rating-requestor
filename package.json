@@ -1,6 +1,6 @@
 {
   "name": "react-native-rating-requestor",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "A React Native component to prompt users for a rating after positive interactions",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jlyman/react-native-rating-requestor.git"
+    "url": "git+https://github.com/KatieVo/react-native-rating-requestor.git"
   },
   "keywords": [
     "react",

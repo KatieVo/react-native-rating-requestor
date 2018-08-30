@@ -1,5 +1,10 @@
 A list of changes that have occured through the versions.
 
+3.2.1
+-----
+
+- Get rid of NEUTRAL_DELAY option and button. Change appStoreId to appStoreUrl. Changes were made for sertain project purposes.
+
 3.2.0
 -----
 

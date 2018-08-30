@@ -1,9 +1,8 @@
-import React, { Platform, Alert, Linking } from "react-native";
+iimport React, { Platform, Alert, Linking } from "react-native";
 
 import RatingsData from "./RatingsData";
 
 export const buttonTypes = {
-  NEUTRAL_DELAY: "NEUTRAL_DELAY",
   NEGATIVE_DECLINE: "NEGATIVE_DECLINE",
   POSITIVE_ACCEPT: "POSITIVE_ACCEPT"
 };
@@ -15,7 +14,6 @@ const _config = {
   appStoreId: null,
   actionLabels: {
     decline: "Don't ask again",
-    delay: "Maybe later...",
     accept: "Sure!"
   },
   timingFunction: function(currentCount) {
@@ -26,13 +24,11 @@ const _config = {
   },
   buttonOrder: {
     ios: [
-      buttonTypes.NEGATIVE_DECLINE,
-      buttonTypes.NEUTRAL_DELAY,
-      buttonTypes.POSITIVE_ACCEPT
+      buttonTypes.POSITIVE_ACCEPT,
+      buttonTypes.NEGATIVE_DECLINE
     ],
     android: [
       buttonTypes.NEGATIVE_DECLINE,
-      buttonTypes.NEUTRAL_DELAY,
       buttonTypes.POSITIVE_ACCEPT
     ]
   },
@@ -76,19 +72,21 @@ export default class RatingRequestor {
    * 									timingFunction: {func}
    * 								}
    */
-  constructor(appStoreId, options) {
+  constructor(appStoreUrl, options) {
     // Check for required options
-    if (!appStoreId) {
+    if (!appStoreUrl) {
       throw "You must specify your app's store ID on construction to use the Rating Requestor.";
     }
 
     // Merge defaults with user-supplied config
     Object.assign(_config, options);
-		_config.appStoreId = appStoreId;
+		_config.appStoreUrl = appStoreUrl;
 
 		this.storeUrl = Platform.select({
-      ios: `https://itunes.apple.com/${_config.storeCountry}/app/${_config.storeAppName}/id${_config.appStoreId}`,
-      android: `market://details?id=${_config.appStoreId}`,
+      // ios: `https://itunes.apple.com/${_config.storeCountry}/app/${_config.storeAppName}/id${_config.appStoreId}`,
+      // android: `market://details?id=${_config.appStoreId}`,
+      ios: _config.appStoreUrl,
+      android: _config.appStoreUrl
     });
   }
 
@@ -109,12 +107,6 @@ export default class RatingRequestor {
           callback(true, "decline");
         }
       },
-      NEUTRAL_DELAY: {
-        text: _config.actionLabels.delay,
-        onPress: () => {
-          callback(true, "delay");
-        }
-      },
       POSITIVE_ACCEPT: {
         text: _config.actionLabels.accept,
         onPress: () => {
@@ -126,10 +118,11 @@ export default class RatingRequestor {
       }
 		};
 
-		const buttons = Platform.select(_config.buttonOrder).map(bo => buttonDefaults[bo]);
+    const buttons = Platform.select(_config.buttonOrder).map(bo => buttonDefaults[bo]);
+
 
 		if (_config.shouldBoldLastButton) {
-			buttons[2].style = 'cancel';
+			buttons[1].style = 'cancel';
 		}
 
     Alert.alert(
